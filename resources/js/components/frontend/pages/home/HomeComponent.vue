@@ -1,31 +1,58 @@
 <template>
     <div>
         <h1>Produtos</h1>
+        <search @search="search"></search>
         <div class="row">
-            <div class="col-3" v-for="product in products.data" :key="product.id">
-                <div v-if="product.image">
-                    <img :src="[`/storage/products/${product.image}`]" :alt="product.name" class="img-list">
-                </div>
-                {{product.name}}
-            </div>
+            <item v-for="product in products.data" :key="product.id" :item="product" :path="'products'"></item>
+            <hr>
         </div>
+        <paginate :pagination="products" @paginate="loadProducts"></paginate>
     </div>
 </template>
 
 <script>
+    import PaginationComponent from '../../../layouts/PaginationComponent'
+    import Item from '../../../layouts/Item'
+    import Search from './partials/Search'
     export default {
+        data(){
+            return {
+                filter: '',
+                category_id: ''
+            }
+        },
         created(){
             if(this.products.data.length == 0)
                 this.$store.dispatch('loadProducts', {})
         },
+        methods: {
+            loadProducts(page = 1){
+                this.$store.dispatch('loadProducts', {...this.params, page})
+            },
+            search(values){
+                this.filter = values.filter
+                this.category_id = values.category_id
+                this.loadProducts()
+            }
+        },
         computed: {
             products(){
                 return this.$store.state.products.items
+            },
+            params(){
+                return {
+                    filter: this.filter,
+                    category_id: this.category_id,
+                    page: this.products.current_page
+                }
             }
+        },
+        components: {
+            paginate: PaginationComponent,
+            Item,
+            Search
         }
     }
 </script>
 
-<style lang="scss" scoped>
-    .img-list{max-width: 100px;}
-</style>
+

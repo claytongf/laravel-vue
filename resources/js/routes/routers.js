@@ -10,13 +10,17 @@ import ProductsComponent from '../components/admin/pages/products/ProductsCompon
 import HomeComponent from '../components/frontend/pages/home/HomeComponent'
 import ContactComponent from '../components/frontend/pages/contact/ContactComponent'
 import SiteComponent from '../components/frontend/SiteComponent'
+import ProductDetail from '../components/frontend/pages/product/ProductDetail'
+import CartComponent from '../components/frontend/pages/cart/CartComponent'
 
 Vue.use(VueRouter)
 
 const routes = [
     {path: '/', component: SiteComponent, children: [
-        {path: '', component: HomeComponent, name: 'home'},
-        {path: 'contact', component: ContactComponent, name: 'contact'}
+        {path: 'carrinho', component: CartComponent, name: 'cart'},
+        {path: 'product/:id', component: ProductDetail, name: 'product.detail', props: true},
+        {path: 'contact', component: ContactComponent, name: 'contact'},
+        {path: '', component: HomeComponent, name: 'home'}
     ]},
     {path: '/admin', component: AdminComponent, children: [
         {path: '', component: DashboardComponent, name: 'admin.dashboard'},
